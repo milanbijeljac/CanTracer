@@ -1,6 +1,9 @@
 #pragma once
 
-namespace LinuxCom
+namespace Linux
 {
-    int Linux_i_Communication();
+    namespace Communication
+    {
+        int Linux_i_Communication();
+    }
 }

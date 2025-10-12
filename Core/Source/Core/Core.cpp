@@ -8,8 +8,7 @@ namespace Core {
 	{
 		int x;
 
-		x = LinuxCom::Linux_i_Communication();
-
+		x = Linux::Communication::Linux_i_Communication();
 		std::cout << x << std::endl;
 		std::cout << "Hello World!\n";
 		std::cin.get();
