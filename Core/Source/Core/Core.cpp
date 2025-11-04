@@ -6,12 +6,16 @@ namespace Core {
 
 	void PrintHelloWorld()
 	{
-		int x;
+		int serialPort;
 
-		x = Linux::Communication::Linux_i_Communication();
-		std::cout << x << std::endl;
-		std::cout << "Hello World!\n";
-		std::cin.get();
+		serialPort = Linux::Communication::Linux_i_InitCommunication();
+		if(serialPort != 0xFF)
+		{
+			while(1) /* Currently blocking, testing purpose only */
+			{
+				Linux::Communication::Linux_v_SerialRead(serialPort);
+			}
+			
+		}
 	}
-
 }
