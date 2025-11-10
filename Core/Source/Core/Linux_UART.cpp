@@ -5,7 +5,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
-
+#include <iomanip>
+#include <unistd.h>
+#include <stdint.h>
 namespace Linux
 {
     namespace Communication
@@ -36,6 +38,7 @@ namespace Linux
             tty.c_cflag |= CREAD | CLOCAL;          /* Enable read and disable control lines */
             tty.c_lflag &= ~ISIG;                   /* Disable interpretation of INTR, QUIT and SUSP */
             tty.c_iflag &= ~(IXON | IXOFF | IXANY); /* Disable SW flow control */
+            cfmakeraw(&tty);
 
             cfsetispeed(&tty, B115200);
 
@@ -51,12 +54,18 @@ namespace Linux
         
         void Linux_v_SerialRead(int serial_port)
         {
-            int total_number_of_bytes_read_out;
-            char buffer[256];
-            memset(&buffer, '\0', sizeof(buffer));
-            total_number_of_bytes_read_out = read(serial_port, &buffer, sizeof(buffer));
+            uint8_t buffer[256];
+            int total_bytes = read(serial_port, buffer, sizeof(buffer));
 
-            std::cout << buffer;
+            if (total_bytes > 0)
+            {
+                std::cout << "Received " << total_bytes << " bytes: ";
+                for (int i = 0; i < total_bytes; ++i)
+                {
+                    std::printf("%02X ", buffer[i]);
+                }
+                std::printf("\n");
+            }
         }
     }
 }
