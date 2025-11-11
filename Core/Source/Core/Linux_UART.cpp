@@ -51,20 +51,54 @@ namespace Linux
 
             return serial_port;
         } 
+        void CompleateMessage(uint8_t byte)
+        {
+            static uint8_t buffer[13];
+            static uint8_t n = 0;
+            static bool startMessage = false;
+            static bool endMessage = false;
+
+            if(byte == 0xDE)
+            {
+                startMessage = true;
+                endMessage = false;
+            }
+
+            if(byte == 0xAD)
+            {
+                endMessage = true;
+                startMessage = false;
+                n = 0;
+            }
+
+            if(startMessage && byte != 0xDE && byte != 0xAD)
+            {
+                buffer[n] = byte;
+                n++;
+            }
+            if(endMessage)
+            {
+                for (int i = 0; i < 13u; ++i)
+                {
+                    std::cout << std::hex << std::uppercase << std::setfill('0')
+                        << std::setw(2) << static_cast<int>(buffer[i]) << " ";
+                }
+                // switch back to decimal
+                std::cout << std::dec << std::endl; 
+            }
+        }
         
         void Linux_v_SerialRead(int serial_port)
         {
-            uint8_t buffer[256];
+            uint8_t buffer[15];
             int total_bytes = read(serial_port, buffer, sizeof(buffer));
-
-            if (total_bytes > 0)
+            if(total_bytes > 0)
             {
-                std::cout << "Received " << total_bytes << " bytes: ";
+                // Print each byte as 2-digit hex
                 for (int i = 0; i < total_bytes; ++i)
                 {
-                    std::printf("%02X ", buffer[i]);
+                    CompleateMessage(buffer[i]);    
                 }
-                std::printf("\n");
             }
         }
     }
