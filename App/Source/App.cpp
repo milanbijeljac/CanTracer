@@ -1,9 +1,13 @@
-#include "Core/Core.h"
-#include <iostream>
+#include <QApplication>
+#include "MainWindow.h"
 
-
-
-int main()
+int main(int argc, char* argv[])
 {
-	Core::PrintHelloWorld();
+    QApplication app(argc, argv);
+    app.setApplicationName("CanTracer");
+
+    MainWindow window;
+    window.show();
+
+    return app.exec();
 }

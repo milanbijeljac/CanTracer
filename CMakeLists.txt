@@ -3,7 +3,9 @@ project(CanTracer VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
 
-# Add subdirectories
+find_package(Qt6 REQUIRED COMPONENTS Widgets SerialPort)
+
 add_subdirectory(Core)
 add_subdirectory(App)
